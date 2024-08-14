@@ -8,14 +8,17 @@ import { Multicall3 } from "./Multicall3.sol";
 contract Multicall4 is Multicall3 {
     /// @notice Send the full ether balance to the sender
     /// @dev Used to sweep any non-deterministically obtained ether during the course of aggregate execution
-    function drain() external payable {
-        payable(msg.sender).transfer(address(this).balance);
+    /// @param receiver The address to send the ether to
+    function drain(address payable receiver) public payable {
+        receiver.transfer(address(this).balance);
     }
 
     /// @notice Send the full balance of `token` to the sender
     /// @dev Used to sweep any non-deterministically obtained tokens during the course of aggregate execution
-    function drain(IERC20 token) external payable {
-        token.transfer(msg.sender, token.balanceOf(address(this)));
+    /// @param token The token to drain
+    /// @param receiver The address to send the tokens to
+    function drain(IERC20 token, address receiver) public payable {
+        token.transfer(receiver, token.balanceOf(address(this)));
     }
 }
 
